@@ -1,0 +1,18 @@
+<!--pages/read/read-item/read-item-template.wxml-->
+<template name="readItem">
+  <view class="read-container">
+    <view class="read-author-date">
+      <image class="read-author" src="{{avatar}}"> </image>
+      <text class="read-date">{{date}}</text>
+    </view>  
+    <text class="read-title">{{title}}</text>
+    <image class="read-image" src="{{imgSrc}}"></image>
+    <text class="read-content">{{content}}</text>
+    <view class="read-like">
+      <image class="read-like-image" src="/images/icon/chat.png"></image>
+      <text class="read-like-font">{{collection}}</text>
+      <image class="read-like-image" src="/images/icon/view.png"></image>
+      <text class="read-like-font">{{reading}}</text>
+    </view>
+  </view>
+</template>  

@@ -1,0 +1,22 @@
+<!--pages/read/read.wxml-->
+<import src="read-item/read-item-template.wxml" />
+<view>
+  <swiper catchtap="onSwiperTap" vertical="{{false}}" indicator-dots="true" autoplay="true" interval="5000">
+    <swiper-item>
+      <image id="7" src="/images/wx.png" data-postId="3"></image>
+    </swiper-item>
+    <swiper-item>
+      <image src="/images/vr.png" data-postId="4"></image>
+    </swiper-item>
+    <swiper-item>
+      <image src="/images/iqiyi.png" data-postId="5"></image>
+    </swiper-item>
+  </swiper>
+
+  <block wx:for="{{readList}}" wx:for-item="item" wx:for-index="idx" wx:key="idx">
+    <!-- template  data-postId 自定义属性 item.postId 保证点击时跳转到对应index的页面 -->
+    <view catchtap="onReadTap" data-postId="{{item.postId}}">
+      <template is="readItem" data="{{...item}}"></template>
+    </view>
+  </block>
+</view>

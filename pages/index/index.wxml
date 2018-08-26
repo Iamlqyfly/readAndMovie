@@ -1,0 +1,8 @@
+<!--index.wxml-->
+<view class="container">
+  <image class="avatar" src="/images/avatar/1.png"></image>
+  <text class="motto">welcome to read and movie travel </text>
+  <view class="journey-container" bindtap="onTap">
+    <text class="journey">开启阅读与电影之旅</text>
+  </view>
+</view>
