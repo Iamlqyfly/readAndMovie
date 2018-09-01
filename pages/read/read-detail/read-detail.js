@@ -1,11 +1,10 @@
 // pages/read/read-detail/read-detail.js
 var postData = require('../../../data.js')
 var app = getApp() //从app.js中取得全局变量值
-console.log(postData)
 Page({
   data: {
     isPlayingMusic: false,
-    // collected: true
+    collected: true
   },
   onLoad: function(option) {
     var postId = option.id;
@@ -23,9 +22,15 @@ Page({
     var postCollectedList = wx.getStorageInfoSync('postCollectedList') //所有缓存
     if (postCollectedList) {
       var postCollected = postCollectedList[postId] //当前缓存的其中一个数据值
-      this.setData({
-        collected: postCollected
-      })
+      if (!postCollected) {
+        postCollectedList[postId] = false
+        //更新缓存数据
+        wx.setStorageSync('postCollectedList', postCollectedList)
+      } else {
+        this.setData({
+          collected: postCollected
+        })
+      }  
     } else {
       var postCollectedList = {}
       postCollectedList[postId] = false
@@ -38,32 +43,80 @@ Page({
         isPlayingMusic: true //控制本页面音乐播放器按钮
       })
     }
-    // this.setMusicMonitor()
+    this.setMusicMonitor()
   },
   onCollectionTap: function() {
-    this.getPostsCollectedAsy()
+    this.getPostsCollectedSyc()
   },
-  getPostsCollectedAsy: function() {
-    var that = this
-    wx.getStorage({
-      key: 'postCollectedList',
-      success: function(res) {
-        var postCollectedList = res.data
-        var postCollected = postCollectedList[that.data.currentPostId]
-        postCollected = !postCollected //收藏变成未收藏
-        postCollectedList[that.data.currentPostId] = postCollected
-        that.showToast(postCollectedList, postCollected)
-      },
-    })
-  },
+  //异步请求
+  // getPostsCollectedAsy: function() {
+  //   var that = this
+  //   wx.getStorage({
+  //     key: 'postCollectedList',
+  //     success: function(res) {
+  //       var postCollectedList = res.data
+  //       var postCollected = postCollectedList[that.data.currentPostId]
+  //       postCollected = !postCollected //收藏变成未收藏
+  //       postCollectedList[that.data.currentPostId] = postCollected
+  //       that.showToast(postCollectedList, postCollected)
+  //     },
+  //   })
+  // },
   getPostsCollectedSyc: function() {
-    var postsCollected = wx.getStorageSync('postCollectedList');
-    var postCollected = postsCollected[this.data.currentPostId];
+    var postCollectedList = wx.getStorageSync('postCollectedList');
+    var postCollected = postCollectedList[this.data.currentPostId]; 
     // 收藏变成未收藏，未收藏变成收藏
     postCollected = !postCollected;
-    postsCollected[this.data.currentPostId] = postCollected;
-    this.showToast(postsCollected, postCollected);
+    postCollectedList[this.data.currentPostId] = postCollected;
+    console.log(postCollectedList,1)
+    this.showToast(postCollectedList, postCollected);
   },
+  setMusicMonitor: function () {
+    //点击播放图标和总控开关都会触发这个函数
+    var that = this;
+    wx.onBackgroundAudioPlay(function (event) {
+      var pages = getCurrentPages();
+      var currentPage = pages[pages.length - 1];
+      if (currentPage.data.currentPostId === that.data.currentPostId) {
+        // 打开多个read-detail页面后，每个页面不会关闭，只会隐藏。通过页面栈拿到到
+        // 当前页面的postid，只处理当前页面的音乐播放。
+        if (app.globalData.g_currentMusicPostId == that.data.currentPostId) {
+          // 播放当前页面音乐才改变图标
+          that.setData({
+            isPlayingMusic: true //在页面中控制保存数据状态的
+          })
+        }
+        // if(app.globalData.g_currentMusicPostId == that.data.currentPostId )
+        // app.globalData.g_currentMusicPostId = that.data.currentPostId;
+      }
+      app.globalData.g_isPlayingMusic = true; //全局为false，不需要去改变
+
+    });
+  },  
+  onMusicTap: function (event){
+    var currentPostId = this.data.currentPostId
+    // var postData = postData.postList[currentPostId]
+    var isPlayingMusic = this.data.isPlayingMusic
+    if (isPlayingMusic) {
+      wx.pauseBackgroundAudio()
+      this.setData({
+        isPlayingMusic: false
+      })
+      app.globalData.g_isPlayingMusic = false
+    } else {
+      wx.playBackgroundAudio({
+        dataUrl: postData.postList[currentPostId].music.url,
+        title: postData.postList[currentPostId].music.title,
+        coverImgUrl: postData.postList[currentPostId].music.coverImgUrl,
+      })
+      this.setData({
+        isPlayingMusic: true
+      })
+      app.globalData.g_currentMusicPostId = this.data.currentPostId;
+      app.globalData.g_isPlayingMusic = true;
+    }
+
+  }, 
   showModal: function(postCollectedList, postCollected) {
     var that = this
     wx.showModal({

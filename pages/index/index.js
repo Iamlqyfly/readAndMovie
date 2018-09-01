@@ -4,7 +4,7 @@ const app = getApp()
 
 Page({
   onTap: function (event) {
-    wx.switchTab({
+    wx.navigateTo({
       url: '../read/read',
     })
   }

@@ -2,29 +2,16 @@
   "pages": [
     "pages/index/index",
     "pages/read/read",
-    "pages/movie/movie",
+    "pages/movies/movies",
     "pages/read/read-detail/read-detail",
-    "pages/read/read-item/read-item-template"
+    "pages/read/read-item/read-item-template",
+    "pages/movies/movie-list/movie-list-template",
+    "pages/movies/movie-grid/movie-grid-template",
+    "pages/movies/more-movie/more-movie-template",
+    "pages/movies/movie/movie-template",
+    "pages/movies/movie-detail/movie-detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#90aeff"
-  },
-  "tabBar": {
-    "borderStyle": "white",
-    "position": "bottom",
-    "list": [
-      {
-        "pagePath": "pages/read/read",
-        "text": "阅读",
-        "iconPath": "images/tab/yuedu.png",
-        "selectedIconPath": "images/tab/yuedu_hl.png"
-      },
-      {
-        "pagePath": "pages/movie/movie",
-        "text": "电影",
-        "iconPath": "images/tab/dianying.png",
-        "selectedIconPath": "images/tab/dianying_hl.png"
-      }
-    ]
   }
 }

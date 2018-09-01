@@ -15,7 +15,7 @@ Page({
     })
   },
   onReadTap: function (event) {
-    var postId = event.currentTarget.dataset.postId
+    var postId = event.currentTarget.dataset.id
     wx.navigateTo({
       url: "read-detail/read-detail?id=" + postId
     })

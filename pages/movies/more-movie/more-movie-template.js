@@ -1,4 +1,4 @@
-// pages/movie/movie.js
+// pages/movie/more-movie/more-movie-template.js
 Page({
 
   /**
